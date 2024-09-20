@@ -1,0 +1,32 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "path:default",
+    "event:default",
+    "window:default",
+    "window:allow-set-position",
+    "window:allow-set-ignore-cursor-events",
+    "app:default",
+    "image:default",
+    "resources:default",
+    "menu:default",
+    "tray:default",
+    "shell:allow-open",
+    "dialog:allow-open",
+    "dialog:allow-message",
+    "dialog:allow-save",
+    "deep-link:default",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "log:default",
+    "notification:default",
+    "window:allow-create",
+    "webview:default",
+    "webview:allow-create-webview-window"
+  ]
+}

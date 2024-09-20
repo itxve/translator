@@ -1,0 +1,38 @@
+[package]
+name = "translategoogle"
+version = "0.0.1"
+description = "ii18翻译"
+authors = ["itxve"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-beta", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-beta.7", features = ["macos-private-api"] }
+tauri-plugin-shell = "2.0.0-beta.7"
+tauri-plugin-dialog = "2.0.0-beta.7"
+tauri-plugin-fs = "2.0.0-beta.7"
+tauri-plugin-deep-link = "2.0.0-beta.7"
+tauri-plugin-log = "2.0.0-beta.7"
+
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rustlate = "1.0.0"
+reqwest = { version = "0.11.4", features = ["blocking"] }
+tl = "0.2.1"
+tokio = { version = "1.0", features = ["full"] }
+html-escape = "0.2.9"
+percent-encoding = "2.1.0"
+async-trait = "0.1"
+futures = "0.3"
+tokio-stream = "0.1"
+headers = "0.3"
+serde-xml-rs = "0.6.0"
+tauri-plugin-notification = "2.0.0-beta.10"
+mouse_position="0.1.4"
+
+

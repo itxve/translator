@@ -1,5 +1,7 @@
 ## 这是一个 ii18 文件翻译器 （自己编译下）
 
+<img src="./image.png" width='500px' height='400px'  >
+
 #### 支持文件列表
 
 <li>安卓 strings.xml</li>

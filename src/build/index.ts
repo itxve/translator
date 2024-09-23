@@ -9,26 +9,28 @@ import { packbuild } from "../../package.json";
  */
 export function genInputEntry(command: string, port: number) {
   let entryConfig: Record<string, any> = packbuild as any;
-  const allEntry = glob.sync(["./src/pages/**/main.tsx"]); //路径是基于项目目录
+  const allEntry = glob.sync(
+    packbuild["scan"].map((item) => resolve(__dirname, "../../", item))
+  ); //路径是基于项目目录
 
   let temp = fs
     .readFileSync(resolve(__dirname, "../../template.html"))
     .toString();
 
-  // 初始化模版文件内容
-  let content = "";
+  let { build } = entryConfig;
   let entryPage: Record<string, string> = {};
   allEntry.forEach((entry) => {
-    let [_, modeuleName] = entry.match(/pages\/(.*)\/main.tsx/)!;
+    let [_, _1, modeuleName] = entry.match(/(.*)\/(.*)\/main.tsx/)!;
     let writeHtmlPath = resolve(__dirname, `../../${modeuleName}.html`);
-    // 如果出现了新的入口文件且没有在配置项内则写入该配置并且将其设置为true(也就是说默认将其统一打包)
+    console.log("匹配模块:::", _);
     const mode: Record<string, any> = {
       title: entryConfig[modeuleName]?.title || modeuleName,
       src: entry,
+      ...(entryConfig[modeuleName] || {}),
     };
-    // 模版匹配
-    content = temp.replace(/{{(.*?)}}/gi, (_, p1) => {
-      return mode[p1.trim()];
+    //  贪婪模式
+    let content = temp.replace(/{{(.*?)}}/gi, (ma, p1) => {
+      return mode[p1.trim()] || ma; //替换失败返回原有文本
     });
     // 写入口文件
     fs.writeFileSync(writeHtmlPath, content);
@@ -36,17 +38,17 @@ export function genInputEntry(command: string, port: number) {
   });
 
   if (command === "build") {
-    let { build } = entryConfig;
     console.log(
       `********************输出模块:[${[...build].join(
         "]["
       )}]********************`
     );
-    let _entryPage: any = {};
-    [...build].forEach((key) => {
-      _entryPage[key] = entryPage[key];
-    });
-    entryPage = _entryPage;
+    entryPage = Object.keys(entryPage).reduce((acc: any, key) => {
+      if (entryPage[key] !== undefined && [...build].includes(key)) {
+        acc[key] = entryPage[key];
+      }
+      return acc;
+    }, {});
   } else {
     printServerUrls(entryPage, port);
   }

@@ -27,7 +27,7 @@
     },
     "types": ["vite/client"]
   },
-  "include": ["src"],
+  "include": ["src","src/build/index.ts"],
 
   "references": [{ "path": "./tsconfig.node.json" }]
 }

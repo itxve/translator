@@ -69,6 +69,7 @@ export default defineConfig(async ({ command }) => ({
           //剩余资源文件
           return "assets/[name]-[hash].[ext]";
         },
+        
       },
     },
   },

@@ -36,15 +36,16 @@
     "vite": "^5.3.1"
   },
   "packbuild": {
+    "scan": [
+      "src/*/**/main.tsx"
+    ],
     "build": [
       "index",
-      "avg"
+      "pug"
     ],
     "index": {
-      "title": "初始化 界面"
-    },
-    "avg": {
-      "title": ""
+      "title": "初始化 界面",
+      "az1": "KJJJF"
     }
   }
 }

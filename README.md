@@ -14,6 +14,9 @@
 ```
 // src/build/index.ts 打包配配置
 "packbuild": {
+    "scan": [
+      "src/*/**/main.tsx"
+    ], // 扫描入口文件
     "build": [
       "index",
       "avg"

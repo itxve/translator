@@ -3,6 +3,7 @@ import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import alias from "@rollup/plugin-alias";
 import { genInputEntry } from "./src/build";
+import obfuscator from "rollup-plugin-obfuscator";
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ command }) => ({
@@ -14,6 +15,34 @@ export default defineConfig(async ({ command }) => ({
         { find: "@src", replacement: resolve(__dirname, "src") },
         { find: "@pages", replacement: resolve(__dirname, "src/pages") },
       ],
+    }),
+    obfuscator({
+      global: false,
+      // options配置项实际为 javascript-obfuscator 选项，具体可查看https://github.com/javascript-obfuscator/javascript-obfuscator
+      options: {
+        compact: true,
+        identifierNamesGenerator: "hexadecimal",
+        log: false,
+        numbersToExpressions: true,
+        renameGlobals: false,
+        selfDefending: true,
+        simplify: true,
+        splitStrings: true,
+        splitStringsChunkLength: 5,
+        stringArray: true,
+        stringArrayCallsTransform: true,
+        stringArrayEncoding: ["rc4"],
+        stringArrayIndexShift: true,
+        stringArrayRotate: true,
+        stringArrayShuffle: true,
+        stringArrayWrappersCount: 5,
+        stringArrayWrappersChainedCalls: true,
+        stringArrayWrappersParametersMaxCount: 5,
+        stringArrayWrappersType: "function",
+        stringArrayThreshold: 1,
+        transformObjectKeys: true,
+        unicodeEscapeSequence: false,
+      },
     }),
   ],
 
@@ -69,7 +98,6 @@ export default defineConfig(async ({ command }) => ({
           //剩余资源文件
           return "assets/[name]-[hash].[ext]";
         },
-        
       },
     },
   },

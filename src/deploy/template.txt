@@ -1,0 +1,73 @@
+JSON 格式配置说明
+{
+#部署平台(下拉数据列表的)
+  "platform": [
+    {
+      "value": "1",             #oss_map_info.upload_type 与之对应
+      "label": "admin"          #本地文件夹
+      "use_app_code_prifix":true    ## 使用 oss_map_info.app_code 当前缀（环境隔离） h5/app_code
+    }
+  ],
+  "oss_config": [
+    {
+      "storage_code": "test,mall01",            #oss_map_info.app_code 与之对应 （bucket_name+access_key_id+access_key_secret相同配置使用,分割）
+      "bucket_name": "cash-hk1",
+      "end_point": "http://oss-cn-hongkong.aliyuncs.com",
+      "access_key_id": "",
+      "access_key_secret": ""
+    }
+  ],
+  # oss目录映射配置
+  "oss_map_info": [
+    {
+      "app_code": "mall01",                        #oss_config.storage_code 与之对应
+      "upload_type": 1,                            #platform.value 与之对应
+      "upload_desc": "xx-admin",                   #描述标识（无其他作用）
+      "target_base_path": "mytest-xx/admin-xxxx"   #oss目录（不需要写oss_config.bucket_name，对应桶下的目录即可）
+    },
+    {
+      "app_code": "test",
+      "upload_type": 1,
+      "upload_desc": "test-admin",
+      "target_base_path": "mytest-test/admin-aS8iG5HEs",
+      "h5_prefix": "mytest-test/admin-aS8iG5HEs"
+    }
+  ]
+}
+
+
+
+---------------------- demo ----------------
+{
+
+  "platform": [
+    {
+      "value": "1", 
+      "label": "admin"
+    }
+  ],
+  "oss_config": [
+    {
+      "storage_code": "test,mall01",
+      "bucket_name": "cash-hk1",
+      "end_point": "http://oss-cn-hongkong.aliyuncs.com",
+      "access_key_id": "",
+      "access_key_secret": ""
+    }
+  ],
+
+  "oss_map_info": [
+    {
+      "app_code": "test",
+      "upload_type": 1,
+      "upload_desc": "test-admin", 
+      "target_base_path": "mytest-xx/admin-xx"
+    },
+    {
+      "app_code": "mall01",
+      "upload_type": 1,
+      "upload_desc": "mall01-admin", 
+      "target_base_path": "mytest-mall01-xxx/admin-xx"
+    }  
+  ]
+}

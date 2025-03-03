@@ -8,6 +8,8 @@ use std::{env, path::PathBuf};
 use tauri::AppHandle;
 use tauri_plugin_fs::FsExt;
 use tauri_plugin_log::{Target, TargetKind};
+mod cmds;
+mod oss;
 mod rustlate;
 
 #[tauri::command]
@@ -60,24 +62,12 @@ async fn translate(req: TranslateReq) -> String {
         Err(_) => "".to_owned(),
     }
 }
-use mouse_position::mouse_position::Mouse;
-
-#[tauri::command(async)]
-fn mouse_position() -> (i32, i32) {
-    let position = Mouse::get_mouse_position();
-    match position {
-        Mouse::Position { x, y } => (x, y),
-        Mouse::Error => {
-            println!("Error getting mouse position");
-            (0, 0)
-        }
-    }
-}
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
@@ -92,12 +82,13 @@ fn main() {
                 ])
                 .build(),
         )
-        .plugin(tauri_plugin_notification::init())
         .invoke_handler(tauri::generate_handler![
             run_args,
             translate,
             allow_file,
-            mouse_position
+            oss::aliyu_oss_upload,
+            oss::platform_list,
+            oss::exists
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,7 +1,7 @@
 {
-  "productName": "translategoogle",
+  "productName": "贝达🛠️📦",
   "version": "../package.json",
-  "identifier": "com.tauri.translategoogle",
+  "identifier": "com.tauri.贝达工具",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "文件翻译器",
+        "title": "贝达厂工具箱",
         "maximizable": false,
         "resizable": false,
         "fullscreen": false,

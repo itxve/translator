@@ -3,10 +3,14 @@ import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import alias from "@rollup/plugin-alias";
 import { genInputEntry } from "./src/build";
+import MyCopy from "./src/build/copy";
+
 import obfuscator from "rollup-plugin-obfuscator";
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ command }) => ({
+  //静态资源 不支持的后缀 需要配置导入 不然会被 树摇掉
+  assetsInclude: ["**/*.xx"],
   plugins: [
     react(),
     alias({
@@ -44,6 +48,7 @@ export default defineConfig(async ({ command }) => ({
         unicodeEscapeSequence: false,
       },
     }),
+    MyCopy(command),
   ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
@@ -69,8 +74,6 @@ export default defineConfig(async ({ command }) => ({
           }
         },
         entryFileNames({ name }) {
-          // const { facadeModuleId, moduleIds } = chunkInfo;
-          // console.log("chunkInfo:", { facadeModuleId, moduleIds });
           return `[name]/index.js`;
         }, //入口文件
         chunkFileNames() {
@@ -92,6 +95,7 @@ export default defineConfig(async ({ command }) => ({
             ".svg",
             ".ico",
           ];
+          // 如果小于  build.assetsInlineLimit 会变成base64 字符串
           if (imgExts.some((ext) => assetInfo.name.endsWith(ext))) {
             return "imgs/[name]-[hash].[ext]";
           }
@@ -100,5 +104,6 @@ export default defineConfig(async ({ command }) => ({
         },
       },
     },
+    assetsInlineLimit: 0,
   },
 }));

@@ -1,16 +1,15 @@
-import { languages, toLanguages } from "../../lang";
+import { languages, toLanguages } from "../lang";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useEffect, useState, useRef } from "react";
-import { translator, run_args, allow_file } from "../../cmds";
-import { nest_transloter, sleep, extensions } from "../../utils";
+import { translator, run_args, allow_file } from "../cmds";
+import { nest_transloter, sleep, extensions } from "../utils";
 import JSON5 from "json5";
 // import Worker from "./sw/works?worker&inline";
 import { getCurrent } from "@tauri-apps/plugin-deep-link";
 import * as log from "@tauri-apps/plugin-log";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
-import { notification, tryRequestPermission } from "../../message";
+import { notification, tryRequestPermission } from "../message";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -24,7 +23,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-function Translator() {
+function App() {
   const [content, setContent] = useState<any>();
   const [fileType, setFileType] = useState("");
   const [translatorContent, setTranslatorContent] = useState<any>();
@@ -35,6 +34,7 @@ function Translator() {
   const [selectFileAbled, setSelectFileAbled] = useState(false);
   const [translatoring, setTranslatoring] = useState(false);
   const [canSave, setCanSave] = useState(true);
+  const [fName, setFileName] = useState("");
   const keyRef = useRef<any>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -93,20 +93,22 @@ function Translator() {
   // };
 
   const fileSelect = async () => {
-    let selectPathObject = await dialog.open({
+    let selectPathObject: any = await dialog.open({
       title: "选择文件",
       multiple: false,
       directory: false,
     });
-    let filePath = selectPathObject?.path!;
-    await loadByPath(filePath);
+
+    let filePath = selectPathObject.path;
+    await loadByPath(filePath!);
   };
 
   const loadByPath = async (filePath: string) => {
-    console.log("loadByPath:", filePath);
     const fileType = `${filePath}`.split(".").pop();
+    let fileName = `${filePath}`.split("/").pop();
+    fileName = fileName!.replace(/\.(.*)/, "");
+    setFileName(fileName);
     setFileType(fileType!);
-    console.log("fileType:", fileType);
     let contentText = await readTextFile(filePath as string);
     contentText = extensions[fileType!].replace(contentText);
     setTranslatorabled(false);
@@ -130,7 +132,6 @@ function Translator() {
       notification({
         title: "这是一个通知",
         body: "你的文件翻译完成",
-        autoCancel: false,
       });
     });
   };
@@ -138,6 +139,7 @@ function Translator() {
   const saveToFile = async () => {
     const filePath = await dialog.save({
       title: "保存文件",
+      defaultPath: fName + "_" + to,
       filters: [
         {
           name: "",
@@ -151,22 +153,6 @@ function Translator() {
       extensions[fileType!].concat(JSON5.stringify(translatorContent, null, 2))
     );
     dialog.message("保存成功");
-  };
-
-  const openA = () => {
-    const appWindow = new WebviewWindow("avg", {
-      url: "avg.html",
-      x: 10,
-      y: 10,
-      width: 64,
-      height: 64,
-      // closable: false,
-      // maximizable: false,
-      // minimizable: false,
-      // skipTaskbar: true,
-      // transparent: true,
-      // decorations: false,
-    });
   };
 
   return (
@@ -216,6 +202,7 @@ function Translator() {
         <div className="flex self-center gap-2">
           <Button
             color={"primary"}
+            variant="faded"
             isDisabled={selectFileAbled}
             onClick={fileSelect}
           >
@@ -238,9 +225,6 @@ function Translator() {
         <Button color={"warning"} endContent={<>⚠️</>} onClick={onOpen}>
           关于
         </Button>
-        <Button color={"primary"} onClick={openA}>
-          打开a页面
-        </Button>
         <span
           ref={keyRef}
           title="正在翻译key"
@@ -260,9 +244,6 @@ function Translator() {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                关于软件功能
-              </ModalHeader>
               <ModalBody>
                 <h2>支持翻译文件格式</h2>
                 <ul className="text-blue-500 animate-textclip container">
@@ -285,4 +266,4 @@ function Translator() {
   );
 }
 
-export default Translator;
+export default App;

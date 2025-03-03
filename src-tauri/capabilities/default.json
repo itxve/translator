@@ -3,30 +3,49 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "main"
+    "main",
+    "sql",
+    "esign",
+    "excel",
+    "deploy",
+    "translator"
   ],
   "permissions": [
-    "path:default",
-    "event:default",
-    "window:default",
-    "window:allow-set-position",
-    "window:allow-set-ignore-cursor-events",
-    "app:default",
-    "image:default",
-    "resources:default",
-    "menu:default",
-    "tray:default",
+    "core:path:default",
+    "core:event:default",
+    "core:window:default",
+    "core:window:allow-set-position",
+    "core:window:allow-set-ignore-cursor-events",
+    "core:window:allow-create",
+    "core:webview:default",
+    "core:webview:allow-create-webview-window",
+    "core:app:default",
+    "core:image:default",
+    "core:resources:default",
+    "core:menu:default",
+    "core:tray:default",
     "shell:allow-open",
     "dialog:allow-open",
     "dialog:allow-message",
     "dialog:allow-save",
     "deep-link:default",
     "fs:allow-read-text-file",
+    "fs:allow-read-file",
     "fs:allow-write-text-file",
+    "fs:allow-write-file",
     "log:default",
     "notification:default",
-    "window:allow-create",
-    "webview:default",
-    "webview:allow-create-webview-window"
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "https://*:*/**"
+        },
+        {
+          "url": "http://*:*/**"
+        }
+      ]
+    },
+    "clipboard-manager:allow-write-text"
   ]
 }

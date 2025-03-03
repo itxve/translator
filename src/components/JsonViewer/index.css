@@ -1,0 +1,50 @@
+.pre {
+  color: #f1f1f1;
+  padding: 10px 16px;
+  border: 2px solid #646262;
+  border-radius: 10px;
+
+  & span {
+    counter-increment: line;
+    display: block;
+    color: black;
+    line-height: 1.5rem;
+    &:first-child {
+      margin-top: 20px;
+    }
+  }
+  &:first-child {
+    margin-top: 10px;
+  }
+}
+
+.pre-line-number {
+  color: #f1f1f1;
+  padding: 10px 16px;
+  border: 2px solid #646262;
+  border-radius: 10px;
+
+  & span {
+    counter-increment: line;
+
+    display: block;
+    color: black;
+    line-height: 1.5rem;
+    &:first-child {
+      margin-top: 20px;
+    }
+  }
+
+  & span::before {
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 0.5em;
+    margin-right: 0.5em;
+    color: #888;
+    width: 4em; /* 根据最大行号设置宽度，这里为1000，需要4位数字 */
+    text-align: right; /* 右对齐数字 */
+    margin-right: 1em; /* 数字和文本之间的间距 */
+    font-family: monospace;
+  }
+}

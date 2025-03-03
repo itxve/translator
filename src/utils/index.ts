@@ -1,5 +1,15 @@
 import JSON5 from "json5";
 
+export function groupArray(arr: Array<any>) {
+  arr = arr.filter((it) => !!it);
+  let newGroup = [];
+  for (let index = -1; index < arr.length - 1; ) {
+    newGroup.push(arr[++index]);
+    newGroup.push(arr[++index]);
+  }
+  return newGroup;
+}
+
 export async function nest_transloter(
   content: any,
   apply: (v: string, key: string) => Promise<string>
@@ -89,3 +99,22 @@ export const extensions: Record<
     },
   },
 };
+
+// code = `
+// export default {
+//   name: "111",
+//   author: "",
+//   version: "0.0.1",
+//   hander: async (context) => {
+//     let cd = "adf\nqwe".split("\n\r");
+//     console.log("context:", context,`${cd}`);
+//   },
+// };
+// `;
+export async function codeToFunctioin(code: string) {
+  const blob = new Blob([code], { type: "application/javascript" });
+  const url = URL.createObjectURL(blob);
+  const module = await import(url);
+  URL.revokeObjectURL(url);
+  return module;
+}

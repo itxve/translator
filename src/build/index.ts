@@ -22,7 +22,6 @@ export function genInputEntry(command: string, port: number) {
   allEntry.forEach((entry) => {
     let [_, _1, modeuleName] = entry.match(/(.*)\/(.*)\/main.tsx/)!;
     let writeHtmlPath = resolve(__dirname, `../../${modeuleName}.html`);
-    console.log("匹配模块:::", _);
     const mode: Record<string, any> = {
       title: entryConfig[modeuleName]?.title || modeuleName,
       src: entry,

@@ -17,7 +17,7 @@ import {
   CardBody,
   Select,
   SelectItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useMemo, useState } from "react";
 
 function App() {

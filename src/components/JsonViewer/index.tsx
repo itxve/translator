@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./index.css";
-import { Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox } from "@heroui/react";
 import * as clipboard from "@tauri-apps/plugin-clipboard-manager";
 
 export default function JsonViewer(props: { data: any }) {

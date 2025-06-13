@@ -1,4 +1,4 @@
-import { Card, CardBody, Link, CardHeader } from "@nextui-org/react";
+import { Card, CardBody, Link, CardHeader } from "@heroui/react";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 export default function App(props: {
   id: string;

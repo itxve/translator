@@ -8,7 +8,7 @@ import {
   Tab,
   Tabs,
   Textarea,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useState } from "react";
 import JsonViewer from "@src/components/JsonViewer";
 

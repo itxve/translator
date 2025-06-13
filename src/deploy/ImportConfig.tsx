@@ -1,4 +1,4 @@
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import * as fs from "@tauri-apps/plugin-fs";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import ossUtil from "./oss";

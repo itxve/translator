@@ -1,4 +1,4 @@
-import { Button, CardBody, Tabs, Tab, Card } from "@nextui-org/react";
+import { Button, CardBody, Tabs, Tab, Card } from "@heroui/react";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useRef, useState } from "react";
 import md5 from "md5";

@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use reqwest::Client;
 
 pub struct Translator<'a> {
@@ -9,7 +8,6 @@ struct Google;
 
 struct Baidu;
 
-#[async_trait]
 trait Parse {
     async fn fetch_page(&self, text: &str, from: &str, to: &str) -> Result<String, String>;
     async fn parse_result(&self, result: Result<String, String>) -> Result<String, String>;
@@ -34,7 +32,6 @@ impl<'a> Translator<'a> {
     }
 }
 
-#[async_trait]
 impl Parse for Google {
     async fn fetch_page(&self, text: &str, from: &str, to: &str) -> Result<String, String> {
         println!("Google.......");
@@ -67,7 +64,6 @@ impl Parse for Google {
     }
 }
 
-#[async_trait]
 impl Parse for Baidu {
     async fn fetch_page(&self, text: &str, from: &str, to: &str) -> Result<String, String> {
         println!("Baidu......");

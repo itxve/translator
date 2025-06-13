@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalBody,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { ReactNode } from "react";
 
 function ModalApp(props: {

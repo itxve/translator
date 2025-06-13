@@ -18,7 +18,7 @@ import {
   TableRow,
   Tabs,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import { useEffect, useMemo, useState } from "react";
 import ossUtil from "./oss";

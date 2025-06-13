@@ -6,7 +6,7 @@ import {
   saveConfig,
   delConfig,
 } from "@src/utils/ServerConfigUtil";
-import { Textarea, Button, Select, SelectItem, Input, SharedSelection } from "@nextui-org/react";
+import { Textarea, Button, Select, SelectItem, Input, SharedSelection } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { config_template, type ConfigItem, type REQUESTINFO } from "@src/types";
 import { fetch } from "@tauri-apps/plugin-http";

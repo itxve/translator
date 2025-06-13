@@ -21,7 +21,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 function App() {
   const [content, setContent] = useState<any>();

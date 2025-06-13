@@ -1,4 +1,4 @@
-import { Tab, Tabs, Card, CardBody } from "@nextui-org/react";
+import { Tab, Tabs, Card, CardBody } from "@heroui/react";
 import moment from "moment-timezone";
 import JsonViewer from "@src/components/JsonViewer";
 

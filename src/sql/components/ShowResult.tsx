@@ -1,6 +1,7 @@
 import { Tab, Tabs, Card, CardBody } from "@heroui/react";
 import moment from "moment-timezone";
 import JsonViewer from "@src/components/JsonViewer";
+import { DateFormatConfig } from "@src/utils/LocalConfigUtil";
 
 export default function ShowSql(props: {
   baseInfo?: string;
@@ -22,17 +23,24 @@ export default function ShowSql(props: {
     return (
       <div>
         <JsonViewer
+          key={`${baseInfo}`}
           data={JSON.parse(
             JSON.stringify(
               jsonArr,
               function replacer(key, value) {
                 console.log(key);
-                if (
-                  (~key.indexOf("_time") || ~key.indexOf("_date")) &&
-                  typeof value === "number" &&
-                  value > 0
-                ) {
-                  return moment(value).format("YYYY-MM-DD HH:mm:ss");
+
+                let config = DateFormatConfig();
+                let boolResult = config?.cloums.some((item) => {
+                  if (~item.indexOf("*")) {
+                    return ~key.indexOf(item.replace("*", ""));
+                  } else {
+                    return key === item;
+                  }
+                });
+
+                if (boolResult && typeof value === "number" && value > 0) {
+                  return moment(value).format(config.pattern);
                 }
                 return value;
               },

@@ -5,59 +5,68 @@ import {
   setServerConfigKey,
   saveConfig,
   delConfig,
-} from "@src/utils/ServerConfigUtil";
-import { Textarea, Button, Select, SelectItem, Input, SharedSelection } from "@heroui/react";
+} from "@src/utils/LocalConfigUtil";
+import {
+  Textarea,
+  Button,
+  Select,
+  SelectItem,
+  Input,
+  SharedSelection,
+} from "@heroui/react";
 import { useEffect, useState } from "react";
 import { config_template, type ConfigItem, type REQUESTINFO } from "@src/types";
 import { fetch } from "@tauri-apps/plugin-http";
-import { getLable } from "@src/utils/ServerConfigUtil";
-
+import { getLable } from "@src/utils/LocalConfigUtil";
 
 export default function ServerConfig(props: {
   selectBase?: (selectBaseList: REQUESTINFO[]) => void;
-  className?: string
+  className?: string;
 }) {
+  let config_template_str = JSON.stringify(config_template, null, 2);
   const [sKey, setSkey] = useState(getServerKey());
   const [configList, setConfigList] = useState(getServerConfigList());
   const [configKey, setConfigKey] = useState<string>("");
-  const [configValue, setConfigValue] = useState<string>(
-    JSON.stringify(config_template, null, 2)
-  );
+  const [configValue, setConfigValue] = useState<string>(config_template_str);
   const [database, setDatabase] = useState<Record<string, any>>({});
   const [loadingBase, setLoadingBase] = useState(false);
   const [values, setValues] = useState<Set<string>>(new Set([]));
   const [select, setSelected] = useState(false);
 
   const loadAllData = (conf: ConfigItem) => {
-    setLoadingBase(true)
+    setLoadingBase(true);
     fetch(conf["SERVER"])
       .then((res) => res.json())
       .then((res) => {
         setDatabase(res);
-      }).finally(() => {
-        setLoadingBase(false)
+      })
+      .finally(() => {
+        setLoadingBase(false);
       });
   };
   const onSelectionChange = (e: SharedSelection) => {
-    trrigerValue(e as Set<string>)
+    trrigerValue(e as Set<string>);
   };
 
   const trrigerValue = (e: Set<string>) => {
     setValues(e);
     const configItem = configList[sKey];
-    props.selectBase?.(Array.from(e).map(baseName => {
-      return {
-        BASE_NAME: baseName,
-        url: database[baseName],
-        SQL_REQUEST_KEY: configItem.SQL_REQUEST_KEY,
-        SQL_SIGN_SECRET: configItem.SQL_SIGN_SECRET
-      }
-    }));
-   }
+    props.selectBase?.(
+      Array.from(e).map((baseName) => {
+        return {
+          BASE_NAME: baseName,
+          url: database[baseName],
+          SQL_REQUEST_KEY: configItem.SQL_REQUEST_KEY,
+          SQL_SIGN_SECRET: configItem.SQL_SIGN_SECRET,
+          Platform: configItem.Platform,
+        };
+      })
+    );
+  };
 
   const saveConifgToLocal = (close: Function) => {
     if (!configKey || !configValue) {
-      return
+      return;
     }
     if (!Object.keys(getServerConfigList()).length) {
       setSkey(configKey);
@@ -73,28 +82,26 @@ export default function ServerConfig(props: {
     close();
   };
 
-
   const selectAllBase = () => {
     const _values = new Set(Object.keys(database));
-    const _select=!select
-    setSelected(_select)
+    const _select = !select;
+    setSelected(_select);
     if (!_select) {
       trrigerValue(new Set([]));
-    } else { 
+    } else {
       trrigerValue(_values);
     }
-   }
+  };
 
   useEffect(() => {
     trrigerValue(new Set([]));
     const configItem = configList[sKey];
     if (configItem) {
-      loadAllData(configItem)
+      loadAllData(configItem);
       setConfigKey(sKey);
-      setConfigValue(JSON.stringify(configItem,null,2));
+      setConfigValue(JSON.stringify(configItem, null, 2));
     }
-   
-  }, [sKey])
+  }, [sKey]);
   return (
     <div className={`flex gap-2 items-center ` + props.className}>
       <Modal
@@ -111,7 +118,7 @@ export default function ServerConfig(props: {
                 delConifgToLocal(onClose);
               }}
             >
-              清除本地配置
+              删除配置
             </Button>
             <Button
               color="primary"
@@ -142,7 +149,11 @@ export default function ServerConfig(props: {
           errorMessage="请输入配置JSON"
           value={configValue}
           onChange={(e) => {
-            setConfigValue(e.target.value);
+            if (e.target.value) {
+              setConfigValue(e.target.value);
+            } else {
+              setConfigValue(config_template_str);
+            }
           }}
         ></Textarea>
       </Modal>
@@ -152,7 +163,7 @@ export default function ServerConfig(props: {
         className="max-w-[140px]"
         selectionMode="single"
         selectedKeys={[sKey]}
-        isInvalid={sKey.length<=0}
+        isInvalid={sKey.length <= 0}
         onChange={(e) => {
           const v = e.target.value;
           setSkey(v);
@@ -162,7 +173,7 @@ export default function ServerConfig(props: {
         }}
       >
         {Object.keys(configList).map((key) => (
-          <SelectItem key={key} >{key}</SelectItem>
+          <SelectItem key={key}>{key}</SelectItem>
         ))}
       </Select>
       <Select
@@ -172,16 +183,20 @@ export default function ServerConfig(props: {
         selectionMode="multiple"
         label="数据库"
         selectedKeys={values}
-        isInvalid={values.size<=0}
+        isInvalid={values.size <= 0}
         onSelectionChange={onSelectionChange}
       >
-
-        {
-          [<SelectItem key="all" onClick={selectAllBase} >全部</SelectItem>]
-            .concat(Object.keys(database).reverse().map((key) => (
-              <SelectItem key={key} value={key} title={ `${key} (${ getLable(key)})`} />
-            )))
-        }
+        {[
+          <SelectItem key="all" onClick={selectAllBase}>
+            全部
+          </SelectItem>,
+        ].concat(
+          Object.keys(database)
+            .reverse()
+            .map((key) => (
+              <SelectItem key={key} title={`${key} (${getLable(key)})`} />
+            ))
+        )}
       </Select>
     </div>
   );

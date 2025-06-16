@@ -2,22 +2,30 @@ interface ServerConfig {
   [key: string]: ConfigItem;
 }
 
+let date_format_config = {
+  cloums: ["*_time", "*_date"],
+  pattern: "YYYY-MM-DD HH:mm:ss",
+};
+type DateFormatConfig = typeof date_format_config;
+
 let config_template = {
   SERVER: "",
   SQL_REQUEST_KEY: "",
   SQL_SIGN_SECRET: "",
+  Platform: "dc/其他",
 };
 type ConfigItem = typeof config_template;
 
-export type { ServerConfig, ConfigItem };
+export type { ServerConfig, ConfigItem, DateFormatConfig };
 
-export { config_template };
+export { config_template, date_format_config };
 
 export type REQUESTINFO = {
   BASE_NAME: string;
   url: string;
   SQL_REQUEST_KEY: string;
   SQL_SIGN_SECRET: string;
+  Platform: string;
 };
 
 export type SQL_STATE = {

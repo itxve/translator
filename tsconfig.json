@@ -26,9 +26,9 @@
       "@src/*": ["src/*"],
       "@pages/*": ["src/pages/*"]
     },
-    "types": ["vite/client"]
+    "types": ["node","vite/client"]
   },
-  "include": ["src","src/build"],
+  "include": ["src"],
 
   "references": [{ "path": "./tsconfig.node.json" }]
 }

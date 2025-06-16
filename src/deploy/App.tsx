@@ -24,7 +24,7 @@ import { useEffect, useMemo, useState } from "react";
 import ossUtil from "./oss";
 import { OssConfig, UploadInfoType } from "@src/types";
 import ImportConfig from "./ImportConfig";
-import { getLable } from "@src/utils/ServerConfigUtil";
+import { getLable } from "@src/utils/LocalConfigUtil";
 
 function App() {
   const [directory, setDirectory] = useState();
@@ -149,11 +149,8 @@ function App() {
         },
       })
         .then((res) => {
-          const {
-            success_files,
-            failed_files,
-            total_count,
-          } = res as UploadInfoType[string];
+          const { success_files, failed_files, total_count } =
+            res as UploadInfoType[string];
           uploading[`${de.storage_code + de.platform}`] = {
             status: "success",
             error: "",

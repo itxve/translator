@@ -1,4 +1,5 @@
-import type { ServerConfig, ConfigItem } from "@src/types";
+import type { ServerConfig, ConfigItem, DateFormatConfig } from "@src/types";
+import { date_format_config } from "@src/types";
 
 export function getServerKey() {
   let configStr = localStorage.getItem("config_key") || "";
@@ -53,4 +54,17 @@ export function getLable(key: string): string {
   let _lable_config = localStorage.getItem("lable_config") || "{}";
   let lable_config: Record<string, string> = JSON.parse(_lable_config);
   return lable_config[key] || "";
+}
+
+export function DateFormatConfig(): DateFormatConfig {
+  let _config_str = localStorage.getItem("date_format_config");
+  if (!_config_str) {
+    localStorage.setItem(
+      "date_format_config",
+      JSON.stringify(date_format_config)
+    );
+  }
+  let _config = _config_str || JSON.stringify(date_format_config);
+  let date_format: DateFormatConfig = JSON.parse(_config);
+  return date_format;
 }

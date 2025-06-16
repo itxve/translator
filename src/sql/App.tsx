@@ -7,7 +7,8 @@ import ShowResult from "./components/ShowResult";
 import ServerConfig from "./components/ServerConfig";
 import SqlExec, { SqlRef } from "./components/SqlExec";
 import { REQUESTINFO, SQL_STATE } from "@src/types";
-import { setLable } from "@src/utils/ServerConfigUtil";
+import { setLable } from "@src/utils/LocalConfigUtil";
+import * as CryptoJS from "crypto-js";
 
 function App() {
   const [excuteList, setExcuteList] = useState<REQUESTINFO[]>([]);
@@ -31,7 +32,8 @@ function App() {
         it.BASE_NAME,
         it.url,
         it.SQL_REQUEST_KEY,
-        it.SQL_SIGN_SECRET
+        it.SQL_SIGN_SECRET,
+        it.Platform
       );
     });
   };
@@ -59,11 +61,42 @@ function App() {
       </>
     );
   };
+
+  /**
+   * 前端实现与 Java SecureUtil.aes().encryptHex() 兼容的 AES/ECB/PKCS5Padding 加密
+   * @param plainText 待加密的明文
+   * @param secretKey 密钥（需与后端保持一致）
+   * @returns 16进制格式的加密字符串
+   */
+  const aesEncryptHex = (plainText: string, secretKey: string): string => {
+    try {
+      // 1. 将密钥转换为 CryptoJS 的 WordArray 格式[2,4](@ref)
+      const key = CryptoJS.enc.Utf8.parse(secretKey);
+
+      // 2. 执行 AES/ECB/PKCS5Padding 加密[2,4,7](@ref)
+      const encrypted = CryptoJS.AES.encrypt(
+        CryptoJS.enc.Utf8.parse(plainText),
+        key,
+        {
+          mode: CryptoJS.mode.ECB, // ECB 模式[2,7](@ref)
+          padding: CryptoJS.pad.Pkcs7, // PKCS7 等同于 Java 的 PKCS5Padding[4,7](@ref)
+        }
+      );
+
+      // 3. 返回16进制格式的加密结果（与 Java encryptHex 一致）[4](@ref)
+      return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+    } catch (error) {
+      console.error("AES加密失败:", error);
+      throw new Error("AES加密处理失败");
+    }
+  };
+
   const excuteDataBase = async (
     baseKey: string,
     url: string,
     SQL_REQUEST_KEY: string,
-    SQL_SIGN_SECRET: string
+    SQL_SIGN_SECRET: string,
+    Platform: string
   ) => {
     setSqlExcuteLoading(true);
     console.log(baseKey, url);
@@ -73,8 +106,13 @@ function App() {
     bd["key"] = key;
     bd["sql"] = sqlInfo.sql;
     bd["timestamp"] = timestamp;
-    bd["sign"] = md5(md5(key + timestamp + SQL_SIGN_SECRET));
 
+    if (Platform && Platform.toLocaleLowerCase() == "dc") {
+      let sign_str = key + timestamp + md5(sqlInfo.sql);
+      bd["sign"] = aesEncryptHex(sign_str, SQL_SIGN_SECRET);
+    } else {
+      bd["sign"] = md5(md5(key + timestamp + SQL_SIGN_SECRET));
+    }
     fetch(url + "/execute-sql", {
       connectTimeout: 1000 * 10,
       method: "post",
@@ -94,10 +132,14 @@ function App() {
         }
         rt[baseKey].error = "";
         rt[baseKey].baseInfo = baseInfo;
+
         if (baseInfo) {
           let m = baseInfo.match(/app-code:(.*);app-name:(.*)/);
           if (m) {
-            const [_, label_key, label_name] = m;
+            let [_, label_key, label_name] = m;
+            if (label_key == "false") {
+              label_key = baseKey;
+            }
             setLable(label_key, label_name);
           }
         }

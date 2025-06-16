@@ -22,6 +22,7 @@
     "@tauri-apps/plugin-shell": ">=2.0.0-beta.0",
     "@tauri-apps/plugin-store": "^2.2.0",
     "buffer": "^6.0.3",
+    "crypto-js": "^4.2.0",
     "framer-motion": "^11.18.2",
     "glob": "^11.0.0",
     "json5": "^2.2.3",
@@ -35,7 +36,9 @@
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
     "@tauri-apps/cli": ">=2.0.0-beta.0",
+    "@types/crypto-js": "^4.2.2",
     "@types/md5": "^2.3.5",
+    "@types/node": "^24.0.1",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",

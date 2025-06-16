@@ -4,7 +4,11 @@ export default function App() {
     <div>
       <div className="flex flex-wrap gap-10 mt-10 justify-around ">
         {/* <Item id="esign" title="E签宝工具" /> */}
-        <Item id="sql" title="Sql执行" desc={<p>商城、租机Sql执行页面</p>} />
+        <Item
+          id="sql"
+          title="Sql执行"
+          desc={<p>商城、租机、Dc贷超 Sql执行页面</p>}
+        />
         <Item
           id="deploy"
           title="oss部署工具"

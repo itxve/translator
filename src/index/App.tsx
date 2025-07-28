@@ -16,8 +16,8 @@ export default function App() {
         />
         <Item
           id="excel"
-          title="excel合并"
-          desc={<p>用于一些Excel数据表格合并</p>}
+          title="excel工具"
+          desc={<p>用于一些Excel数据表格合并、过滤</p>}
         />
         <Item
           id="translator"
